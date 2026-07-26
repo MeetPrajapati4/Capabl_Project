@@ -127,9 +127,6 @@ Open a terminal in the project root:
 
 # Install backend dependencies
 pip install -r requirements.txt
-
-# Run Flask API
-python app_api.py
 ```
 
 Backend runs at:
@@ -148,7 +145,8 @@ cd frontend
 npm install
 
 # Run development server
-npm run dev
+cd ..
+npm run dev:all
 ```
 
 Frontend runs at:
