@@ -1,0 +1,22 @@
+{
+  "name": "askify",
+  "private": true,
+  "scripts": {
+    "dev:all": "node kill_ports.js && concurrently -n backend,frontend -c blue,green \"nodemon app_api.js\" \"node wait_backend.js && cd frontend && npm run dev\"",
+    "install:all": "npm install --legacy-peer-deps && cd frontend && npm install --legacy-peer-deps",
+    "build": "cd frontend && npm run build"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "officeparser": "^7.2.1",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.0"
+  }
+}

@@ -1,0 +1,91 @@
+================================================================================
+ASKIFY - HIGH LEVEL CODEBASE SUMMARY (Node.js Port)
+================================================================================
+Use this summary to understand the architecture, tech stack, and module purposes of Askify.
+
+--- TECH STACK & SYSTEM OVERVIEW ---
+Askify is an academic RAG (Retrieval-Augmented Generation) & Study Assistant.
+- Frontend: React (Vite) styled with Vanilla CSS.
+- Backend: Node.js / Express.js API Server (Javascript).
+- RAG & LLM: Direct NVIDIA API Catalog HTTPS integrations, in-memory CloudVectorStore (performing dot product cosine similarity calculations on normalized nvidia/embed-qa-4 embeddings), and locked NVIDIA Chat & Study model engines.
+- Text Extraction: officeparser (handling PDF, DOCX, PPTX, XLSX, TXT, MD).
+- Features: SSE (Server-Sent Events) query streaming, pre-emptive image/video generation guards, interactive study materials (flashcards, quiz, roadmap), and rate-limited chunked document ingestion.
+
+--- DIRECTORY TREE ---
+c:\Users\Lenovo\Desktop\Project\AI\Askify-main
+├── agent.js
+├── app_api.js
+├── config.js
+├── documentLoader.js
+├── documentProcessor.js
+├── sanitizer.js
+├── vectorStore.js
+├── state.js
+├── kill_ports.js
+├── wait_backend.js
+├── package.json
+└── frontend/
+    ├── package.json
+    ├── vite.config.js
+    └── src/
+        ├── api.js
+        ├── App.jsx
+        ├── uploadEngine.js
+        ├── featureGuard.js
+        ├── App.css
+        ├── components/
+        │   ├── ChatArea.jsx
+        │   ├── StudyHub.jsx
+        │   ├── Sidebar.jsx
+        │   ├── AgentDashboard.jsx
+        │   ├── ApiKeyInput.jsx
+        │   ├── ErrorBoundary.jsx
+        │   ├── Icons.jsx
+        │   ├── IntroAnimation.jsx
+        │   ├── Message.jsx
+        │   ├── ModelSelector.jsx
+        │   ├── Notification.jsx
+        │   └── ToolSelector.jsx
+        ├── config/
+        │   └── toolsData.js
+        └── hooks/
+            └── useLLMStream.js
+
+--- BACKEND FILE RESPONSIBILITIES ---
+1. agent.js:
+   - Implements autonomous ReAct (Reason + Act) loops in JS, parsing Thought/Action structures.
+   - Registers tools: 'search_knowledge_base', 'get_document_list', and 'delete_document'.
+   - Streams steps (Thinking, Executing, Observation, Answer) via Server-Sent Events (SSE).
+2. app_api.js:
+   - Express server exposing RAG and study hub endpoints (/api/chat, /api/documents, /api/study/generate).
+   - Features a robust chunked file upload system with initialization, rate limits, SHA-256 checksums, and assembly.
+   - Triggers background indexing of documents asynchronously without blocking requests.
+3. config.js:
+   - Environment variables setup, model locking (minimax-m3 and gemma-4-31b-it), and default hyperparameters.
+4. documentLoader.js:
+   - File extraction using officeparser to read docx, pptx, xlsx, pdf. Support for txt/md.
+   - Implements document classification (question_paper, lab_manual, notes, general) and virtual page splitting.
+5. documentProcessor.js:
+   - Zero-dependency JavaScript implementation of RecursiveCharacterTextSplitter for text chunking.
+6. sanitizer.js:
+   - Centralized text sanitizer to filter control characters and strip base64-encoded image payloads.
+7. vectorStore.js:
+   - Standardized fetch utilities for integrate.api.nvidia.com/v1/embeddings.
+   - In-memory similarity search matching cosine metrics and serializing indices to cloud_vector_store.json.
+8. state.js:
+   - Centralized shared state object holding documents, caches, and warmed engines to prevent circular dependencies.
+
+--- FRONTEND FILE RESPONSIBILITIES ---
+1. App.jsx:
+   - Root container. Coordinates application states: active documents, messages history, active panel (Chat vs Study Hub).
+2. api.js & uploadEngine.js:
+   - API layer connecting the UI to Express. Handles chunk-by-chunk binary uploads, progress reporting, and finalization.
+3. ChatArea.jsx:
+   - Real-time markdown chat viewport. Animates agent thought steps, tool execution tags, and maps citation sources.
+4. StudyHub.jsx:
+   - Interactive widgets dashboard. Visualizes: Flip-card revision decks, milestone roadmaps, and instant MCQ quizzing.
+5. Sidebar.jsx:
+   - Manages list of files, sizes, document deletion triggers, and quick navigation.
+6. useLLMStream.js:
+   - Custom React hook managing EventSource SSE streams to decode real-time incoming token blocks.
+================================================================================
