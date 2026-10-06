@@ -5,7 +5,19 @@
  */
 require('dotenv').config();
 
-const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || "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";
+const rawKey = (process.env.NVIDIA_API_KEY || "").trim();
+const isKeyPlaceholder = !rawKey || rawKey === "your_nvidia_api_key_here";
+
+if (isKeyPlaceholder) {
+  console.warn("\n===================================================================");
+  console.warn("⚠️  ATTENTION: NVIDIA_API_KEY is not configured in .env!");
+  console.warn("👉 Please copy .env.example to .env and set your personal key:");
+  console.warn("   NVIDIA_API_KEY=nvapi-your-key-here");
+  console.warn("👉 Obtain a free key (1,000 credits) at: https://build.nvidia.com");
+  console.warn("===================================================================\n");
+}
+
+const NVIDIA_API_KEY = isKeyPlaceholder ? "" : rawKey;
 
 const CHAT_MODEL = "minimaxai/minimax-m3";
 const STUDY_MODEL = "google/gemma-4-31b-it";

@@ -19,7 +19,7 @@ export default defineConfig({
               // Backend is not up yet — return a clean JSON error instead of crashing
               if (res && !res.headersSent) {
                 res.writeHead(503, { 'Content-Type': 'application/json' })
-                res.end(JSON.stringify({ error: 'Backend not available. Please start the Flask server (python app_api.py).' }))
+                res.end(JSON.stringify({ error: 'Backend not available. Please start the backend server with npm run dev:all.' }))
               }
             }
           })

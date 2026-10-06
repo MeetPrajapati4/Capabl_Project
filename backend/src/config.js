@@ -18,9 +18,7 @@ if (isKeyPlaceholder) {
   console.warn("===================================================================\n");
 }
 
-const NVIDIA_API_KEY = isKeyPlaceholder 
-  ? "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" 
-  : rawKey;
+const NVIDIA_API_KEY = isKeyPlaceholder ? "" : rawKey;
 
 // Primary Model Requested by User (Fast response < 5-8s)
 const CHAT_MODEL = "nvidia/nemotron-3-super-120b-a12b";

@@ -133,6 +133,9 @@ class _NvidiaLLM {
   }
 
   async _postNvidia(model, payload, isStream = false) {
+    if (!NVIDIA_API_KEY || NVIDIA_API_KEY === "your_nvidia_api_key_here") {
+      throw new Error("NVIDIA_API_KEY is not configured. Please add your personal NVIDIA API key to the .env file (NVIDIA_API_KEY=nvapi-...). You can get a free key at https://build.nvidia.com");
+    }
     const url = "https://integrate.api.nvidia.com/v1/chat/completions";
     try {
       const response = await axios.post(url, payload, {
@@ -146,6 +149,9 @@ class _NvidiaLLM {
       });
       return response;
     } catch (err) {
+      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+        throw new Error("Invalid or expired NVIDIA_API_KEY. Please verify your key in .env or obtain a fresh key at https://build.nvidia.com");
+      }
       if (err.response && err.response.status === 400) {
         let errMsg = "";
         try {

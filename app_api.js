@@ -1,8 +1,8 @@
 /**
- * app_api.js — Main Express API Server (Node.js Port)
+ * app_api.js — Main Express API Server (Node.js)
  * 
- * Replaces the Python/Flask API backend on port 7860.
- * Serves React production static assets and supports chunked uploads, RAG pipelines, and study materials.
+ * High-performance Express API server running on port 7860.
+ * Serves React production static assets, chunked multi-file uploads, NVIDIA NIM RAG pipelines, and interactive study hub.
  */
 
 const express = require('express');

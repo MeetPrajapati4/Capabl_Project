@@ -23,6 +23,9 @@ async function embedTexts(texts, inputType = 'passage') {
 
   const batchSize = 50;
   const vectors = [];
+  if (!NVIDIA_API_KEY || NVIDIA_API_KEY === "your_nvidia_api_key_here") {
+    throw new Error("NVIDIA_API_KEY is not configured. Please add your personal NVIDIA API key to the .env file (NVIDIA_API_KEY=nvapi-...). You can obtain a free key with 1,000 credits at https://build.nvidia.com");
+  }
 
   for (let i = 0; i < texts.length; i += batchSize) {
     const batch = texts.slice(i, i + batchSize);

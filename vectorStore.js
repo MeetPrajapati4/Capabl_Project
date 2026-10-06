@@ -23,6 +23,9 @@ async function embedTexts(texts, inputType = 'passage') {
 
   for (let i = 0; i < texts.length; i += batchSize) {
     const batch = texts.slice(i, i + batchSize);
+    if (!NVIDIA_API_KEY || NVIDIA_API_KEY === "your_nvidia_api_key_here") {
+      throw new Error("NVIDIA_API_KEY is not configured. Please add your personal NVIDIA API key to the .env file (NVIDIA_API_KEY=nvapi-...). You can obtain a free key with 1,000 credits at https://build.nvidia.com");
+    }
     try {
       const response = await axios.post(
         'https://integrate.api.nvidia.com/v1/embeddings',
@@ -51,6 +54,9 @@ async function embedTexts(texts, inputType = 'passage') {
         throw new Error(`Invalid response format from NVIDIA API: ${JSON.stringify(responseData)}`);
       }
     } catch (err) {
+      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+        throw new Error("Invalid or expired NVIDIA_API_KEY. Please check your key in .env or obtain a fresh key at https://build.nvidia.com");
+      }
       console.error(`[vectorStore] Error fetching embeddings:`, err.response ? err.response.data : err.message);
       throw err;
     }
